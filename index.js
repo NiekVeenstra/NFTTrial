@@ -70,15 +70,20 @@ const writeMetaData = () => {
 const startCreating = () => {
   let editionCount = 1;
   while (editionCount <= editionSize) {
-    console.log(`randomNum ${createDna(layers.length * 2 - 1)}`);
-    if (1 == 1) {
+    let newDna = createDna(layers.length * 2 - 1);
+    console.log(`dna list ${newDna}`);
+    if (isDnaUnique(dnaList, newDna)) {
+    console.log(`created ${newDna}`);
       // layers.forEach((layer) => {
       //   drawLayer(layer, i);
       // });
       // addMetadata(i);
       // console.log("Creating editionSize " + i);
+      dnaList.push(newDna);
+      editionCount++;
+    } else {
+      console.log("dna exsist");
     }
-    editionCount++;
   }
 };
 
