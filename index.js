@@ -3,13 +3,15 @@ const myArgs = process.argv.slice(2);
 const { createCanvas, loadImage } = require("canvas");
 const { layers, width, height } = require("./input/config.js");
 const { stringify } = require("querystring");
+const { AsyncResource } = require("async_hooks");
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
-const edition = myArgs.length > 0 ? Number(myArgs[0]) : 1;
+const editionSize = myArgs.length > 0 ? Number(myArgs[0]) : 1;
 var metadata = [];
 var attributes = [];
 var hash = [];
 var decodedHash = [];
+var dnaList = [];
 
 const saveLayer = (_canvas, _edition) => {
   fs.writeFileSync(`./output/${_edition}.png`, _canvas.toBuffer("image/png"));
@@ -51,15 +53,34 @@ const drawLayer = async (_layer, _edition) => {
   saveLayer(canvas, _edition);
 };
 
-for (let i = 1; i <= edition; i++) {
-  layers.forEach((layer) => {
-    drawLayer(layer, i);
-  });
-  addMetadata(i);
-  console.log("Creating edition " + i);
-}
+const isDnaUnique = (_DnaList = [], _dna) => {
+  let foundDna = _DnaList.find((i) => i === _dna);
+  return foundDna == undefined ? true : false;
+};
 
-fs.readFile("./output/_metadata.json", (err, data) => {
-  if (err) throw err;
+const createDna = (_len) => {
+  let randNum = Math.floor(Number(`1e${_len}` + Math.random() * `9e${_len}`));
+  return randNum;
+};
+
+const writeMetaData = () => {
   fs.writeFileSync("./output/_metadata.json", JSON.stringify(metadata));
-});
+};
+
+const startCreating = () => {
+  let editionCount = 1;
+  while (editionCount <= editionSize) {
+    console.log(`randomNum ${createDna(layers.length * 2 - 1)}`);
+    if (1 == 1) {
+      // layers.forEach((layer) => {
+      //   drawLayer(layer, i);
+      // });
+      // addMetadata(i);
+      // console.log("Creating editionSize " + i);
+    }
+    editionCount++;
+  }
+};
+
+startCreating();
+writeMetaData();
