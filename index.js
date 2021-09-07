@@ -59,7 +59,7 @@ const isDnaUnique = (_DnaList = [], _dna) => {
 };
 
 const createDna = (_len) => {
-  let randNum = Math.floor(Number(`1e${_len}` + Math.random() * `9e${_len}`));
+  let randNum = Math.floor(Number(`1e${_len}`) + Math.random() * Number(`9e${_len}`));
   return randNum;
 };
 
@@ -71,9 +71,9 @@ const startCreating = () => {
   let editionCount = 1;
   while (editionCount <= editionSize) {
     let newDna = createDna(layers.length * 2 - 1);
-    console.log(`dna list ${newDna}`);
+    console.log(dnaList);
     if (isDnaUnique(dnaList, newDna)) {
-    console.log(`created ${newDna}`);
+      console.log(`created ${newDna}`);
       // layers.forEach((layer) => {
       //   drawLayer(layer, i);
       // });
