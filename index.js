@@ -45,12 +45,30 @@ const addAttributes = (_element, _layer) => {
   decodedHash.push({ [_layer.id]: _element.id });
 };
 
-const drawLayer = async (_layer, _edition) => {
-  let element = _layer.elements[Math.floor(Math.random() * _layer.elements.length)];
-  addAttributes(element, _layer);
-  const image = await loadImage(`${_layer.location}${element.fileName}`);
+const loadLayerImg = async (_layer) => {
+  return new Promise(async (resolve) => {
+    const image = await loadImage(`${_layer.location}${element.fileName}`);
+    resolve({ layer: _layer, loadedImage: image });
+  });
+};
+
+const drawElement = (_element) => {
   ctx.drawImage(image, _layer.position.x, _layer.position.y, _layer.size.width, _layer.size.height);
-  saveLayer(canvas, _edition);
+  addAttributes(_element);
+};
+
+const constructLayerToDna = (_dna, _layers) => {
+  let DnaSegment = _dna.toString().match(/.{1,2}/g);
+  let mappedDnaToLayers = _layers.map((layer) => {
+    let selectedElement = layer.elements[parseInt(DnaSegment) % layer.elements.length];
+    return {
+      location: layer.location,
+      position: layer.position,
+      size: layer.size,
+      selectedElement: selectedElement,
+    };
+  });
+  return mappedDnaToLayers;
 };
 
 const isDnaUnique = (_DnaList = [], _dna) => {
@@ -74,11 +92,10 @@ const startCreating = () => {
     console.log(dnaList);
     if (isDnaUnique(dnaList, newDna)) {
       console.log(`created ${newDna}`);
-      // layers.forEach((layer) => {
-      //   drawLayer(layer, i);
-      // });
+      let results = constructLayerToDna(newDna, layers);
+      
+      results
       // addMetadata(i);
-      // console.log("Creating editionSize " + i);
       dnaList.push(newDna);
       editionCount++;
     } else {
