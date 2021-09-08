@@ -119,7 +119,7 @@ const startCreating = async () => {
       });
 
       await Promise.all(loadedElements).then((elementArray) => {
-        ctx.cealrRect(0, 0, width, height);
+        ctx.clearRect(0, 0, width, height);
         drawBackground();
         elementArray.forEach((element) => {
           drawElement(element);
