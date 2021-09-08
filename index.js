@@ -15,6 +15,25 @@ const saveImage = (_editionCount) => {
   fs.writeFileSync(`./output/${_editionCount}.png`, canvas.toBuffer("image/png"));
 };
 
+const signImage = (_sig) => {
+  ctx.fillStyle = "#000000";
+  ctx.font = "bold 30pt Courier";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.fillText(_sig, 40, 40);
+};
+
+const genColor = () => {
+  let hue = Math.floor(Math.random() * 360);
+  let pastel = `hsl(${hue}, 100%, 85%)`;
+  return pastel;
+};
+
+const drawBackground = () => {
+  ctx.fillStyle = genColor();
+  ctx.fillRect(0, 0, width, height);
+};
+
 const addMetadata = (_dna, _edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
@@ -96,9 +115,13 @@ const startCreating = async () => {
       });
 
       await Promise.all(loadedElements).then((elementArray) => {
+        drawBackground();
         elementArray.forEach((element) => {
           drawElement(element);
         });
+        // add extra writing
+        signImage(`#${editionCount}`);
+
         saveImage(editionCount);
         addMetadata(newDna, editionCount);
         console.log(`created edition: ${editionCount} with DNA: ${newDna}`);
